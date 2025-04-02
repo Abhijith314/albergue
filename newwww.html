@@ -239,37 +239,39 @@
 
         // Submit new complaint
         async function submitComplaint() {
-            try {
-                const category = document.getElementById('category').value;
-                const description = document.getElementById('complaintDesc').value;
-                
-                if (!category || !description) {
-                    throw new Error("Please fill all fields");
-                }
+    try {
+        const category = document.getElementById('category').value;
+        const description = document.getElementById('complaintDesc').value;
+        
+        if (!category || !description) {
+            throw new Error("Please fill all fields");
+        }
 
-                if (!profileData.regNumber) {
-                    await loadProfileData();
-                    if (!profileData.regNumber) {
-                        throw new Error("Profile information not available");
-                    }
-                }
-
-                await db.collection("complaints").add({
-                    studentId: profileData.regNumber,
-                    studentName: profileData.name,
-                    category: category,
-                    description: description,
-                    date: firebase.firestore.FieldValue.serverTimestamp(),
-                    status: "Pending"
-                });
-
-                alert('Complaint submitted successfully!');
-                hideComplaintForm();
-            } catch (error) {
-                console.error("Submit complaint error:", error);
-                alert(error.message);
+        if (!profileData.regNumber) {
+            await loadProfileData();
+            if (!profileData.regNumber) {
+                throw new Error("Profile information not available");
             }
         }
+
+        await db.collection("complaints").add({
+            studentId: profileData.regNumber,
+            studentName: profileData.name,
+            category: category,
+            description: description,
+            date: firebase.firestore.FieldValue.serverTimestamp(),
+            status: "Pending", // Capitalize to match admin dashboard
+            priority: "Medium", // Add priority field
+            room: profileData.room || "N/A" // Add room field
+        });
+
+        alert('Complaint submitted successfully!');
+        hideComplaintForm();
+    } catch (error) {
+        console.error("Submit complaint error:", error);
+        alert(error.message);
+    }
+}
 
         // Load leave passes from Firestore
         async function loadLeavePasses() {

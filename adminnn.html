@@ -132,6 +132,8 @@ function logout() {
             tableBody.appendChild(row);
         });
         
+        // Set up real-time listener
+        setupComplaintsListener(status);
     } catch (error) {
         console.error("Error loading complaints:", error);
         const tableBody = document.querySelector('#complaintsTable tbody');
@@ -195,7 +197,6 @@ function setupComplaintsListener(status) {
             console.error("Error listening to complaints:", error);
         });
 }
-
 // Function to resolve a complaint
 async function resolveComplaint(complaintId) {
     if (confirm("Are you sure you want to mark this complaint as resolved?")) {
